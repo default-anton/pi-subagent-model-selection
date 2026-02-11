@@ -1,0 +1,37 @@
+{
+  "name": "pi-subagent-model-selection",
+  "version": "0.1.0",
+  "description": "Shared deterministic model-selection policy for pi subagent extensions",
+  "type": "module",
+  "keywords": [
+    "pi",
+    "subagent",
+    "model-selection"
+  ],
+  "license": "Apache-2.0",
+  "author": "Anton Kuzmenko",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/default-anton/pi-subagent-model-selection.git"
+  },
+  "bugs": {
+    "url": "https://github.com/default-anton/pi-subagent-model-selection/issues"
+  },
+  "homepage": "https://github.com/default-anton/pi-subagent-model-selection#readme",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "index.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test index.test.ts",
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "npm test"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
