@@ -1,17 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { AuthSource } from "./index.ts";
-import { getSmallModelFromProvider } from "./index.ts";
+import { getSmallModelFromProvider } from "./index.js";
 
-type Model = { provider: string; id: string };
-
-type RegistryOptions = {
-  authSource?: AuthSource;
-  usingOAuth?: boolean;
-};
-
-function makeRegistry(models: Model[], options: RegistryOptions = {}) {
+function makeRegistry(models, options = {}) {
   return {
     getAvailable() {
       return models;
@@ -26,7 +18,7 @@ function makeRegistry(models: Model[], options: RegistryOptions = {}) {
 }
 
 test("oauth mode prefers google-antigravity/gemini-3-flash", () => {
-  const models: Model[] = [
+  const models = [
     { provider: "google-antigravity", id: "gemini-3-flash" },
     { provider: "google-vertex", id: "gemini-3-flash-preview" },
   ];
@@ -44,7 +36,7 @@ test("oauth mode prefers google-antigravity/gemini-3-flash", () => {
 });
 
 test("api-key mode prefers google-vertex gemini-3-flash family", () => {
-  const models: Model[] = [
+  const models = [
     { provider: "google-vertex", id: "gemini-3-flash-preview" },
     { provider: "google", id: "gemini-3-flash-preview" },
   ];
@@ -62,7 +54,7 @@ test("api-key mode prefers google-vertex gemini-3-flash family", () => {
 });
 
 test("api-key mode falls back to google gemini when vertex missing", () => {
-  const models: Model[] = [{ provider: "google", id: "gemini-3-flash-preview" }];
+  const models = [{ provider: "google", id: "gemini-3-flash-preview" }];
 
   const selected = getSmallModelFromProvider(
     makeRegistry(models, { authSource: "env" }),
@@ -77,7 +69,7 @@ test("api-key mode falls back to google gemini when vertex missing", () => {
 });
 
 test("fallback prefers current provider haiku 4.5", () => {
-  const models: Model[] = [{ provider: "anthropic", id: "claude-haiku-4-5" }];
+  const models = [{ provider: "anthropic", id: "claude-haiku-4-5" }];
 
   const selected = getSmallModelFromProvider(
     makeRegistry(models, { authSource: "api_key" }),
@@ -91,7 +83,7 @@ test("fallback prefers current provider haiku 4.5", () => {
 });
 
 test("fallback uses current model with low thinking", () => {
-  const models: Model[] = [{ provider: "openai", id: "gpt-5.1-codex" }];
+  const models = [{ provider: "openai", id: "gpt-5.1-codex" }];
 
   const selected = getSmallModelFromProvider(
     makeRegistry(models, { authSource: "runtime" }),
@@ -105,7 +97,7 @@ test("fallback uses current model with low thinking", () => {
 });
 
 test("when current model is missing, defaults to api-key policy with explicit reason", () => {
-  const models: Model[] = [{ provider: "google", id: "gemini-3-flash-preview" }];
+  const models = [{ provider: "google", id: "gemini-3-flash-preview" }];
 
   const selected = getSmallModelFromProvider(makeRegistry(models, { authSource: "oauth" }), undefined);
 
@@ -116,7 +108,7 @@ test("when current model is missing, defaults to api-key policy with explicit re
 });
 
 test("falls back to isUsingOAuth on older model registries", () => {
-  const models: Model[] = [
+  const models = [
     { provider: "google-antigravity", id: "gemini-3-flash" },
     { provider: "openai", id: "gpt-5.1-codex" },
   ];

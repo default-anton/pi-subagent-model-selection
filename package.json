@@ -1,6 +1,6 @@
 {
   "name": "pi-subagent-model-selection",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared deterministic model-selection policy for pi subagent extensions",
   "type": "module",
   "keywords": [
@@ -19,15 +19,20 @@
   },
   "homepage": "https://github.com/default-anton/pi-subagent-model-selection#readme",
   "exports": {
-    ".": "./index.ts"
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
   },
+  "types": "./index.d.ts",
   "files": [
-    "index.ts",
+    "index.js",
+    "index.d.ts",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test index.test.ts",
+    "test": "node --test index.test.js",
     "pack:check": "npm pack --dry-run",
     "prepublishOnly": "npm test"
   },

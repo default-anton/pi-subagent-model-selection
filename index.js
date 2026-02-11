@@ -1,32 +1,4 @@
-export type ThinkingLevel = "off" | "minimal" | "low" | "medium" | "high" | "xhigh";
-export type AuthMode = "oauth" | "api-key";
-export type AuthSource = "runtime" | "api_key" | "oauth" | "env" | "fallback" | "none";
-
-export type ModelInfo = { provider: string; id: string };
-
-export type SmallModelInfo = { provider: string; id: string; thinkingLevel: ThinkingLevel };
-
-export type SelectedSmallModel = {
-  model: ModelInfo;
-  thinkingLevel: ThinkingLevel;
-  authMode: AuthMode;
-  authSource: AuthSource;
-  reason: string;
-};
-
-export type ModelRegistryLike = {
-  getAvailable(): ModelInfo[];
-  isUsingOAuth?(model: ModelInfo): boolean;
-  getAuthSource?(provider: string): AuthSource;
-};
-
-type AuthResolution = {
-  authMode: AuthMode;
-  authSource: AuthSource;
-  basis: string;
-};
-
-const ANTIGRAVITY_GEMINI_FLASH: SmallModelInfo = {
+const ANTIGRAVITY_GEMINI_FLASH = {
   provider: "google-antigravity",
   id: "gemini-3-flash",
   thinkingLevel: "low",
@@ -35,15 +7,15 @@ const ANTIGRAVITY_GEMINI_FLASH: SmallModelInfo = {
 const VERTEX_PROVIDER = "google-vertex";
 const GEMINI_PROVIDER = "google";
 
-const GEMINI_3_FLASH_MODEL_IDS = ["gemini-3-flash", "gemini-3-flash-preview"] as const;
-const HAIKU_4_5_MODEL_IDS = ["claude-haiku-4-5"] as const;
+const GEMINI_3_FLASH_MODEL_IDS = ["gemini-3-flash", "gemini-3-flash-preview"];
+const HAIKU_4_5_MODEL_IDS = ["claude-haiku-4-5"];
 
-function exactProviderModel(available: ModelInfo[], provider: string, modelId: string): ModelInfo | null {
+function exactProviderModel(available, provider, modelId) {
   const found = available.find((candidate) => candidate.provider === provider && candidate.id === modelId);
   return found ?? null;
 }
 
-function findBestGeminiFlash(available: ModelInfo[], provider?: string): ModelInfo | null {
+function findBestGeminiFlash(available, provider) {
   const candidates = provider ? available.filter((m) => m.provider === provider) : available;
 
   for (const preferredId of GEMINI_3_FLASH_MODEL_IDS) {
@@ -58,7 +30,7 @@ function findBestGeminiFlash(available: ModelInfo[], provider?: string): ModelIn
   return contains ?? null;
 }
 
-function findBestHaiku45(available: ModelInfo[], provider: string): ModelInfo | null {
+function findBestHaiku45(available, provider) {
   const candidates = available.filter((m) => m.provider === provider);
 
   for (const preferredId of HAIKU_4_5_MODEL_IDS) {
@@ -73,7 +45,7 @@ function findBestHaiku45(available: ModelInfo[], provider: string): ModelInfo | 
   return contains ?? null;
 }
 
-function detectAuthResolution(modelRegistry: ModelRegistryLike, currentModel: ModelInfo | undefined): AuthResolution {
+function detectAuthResolution(modelRegistry, currentModel) {
   if (!currentModel) {
     return {
       authMode: "api-key",
@@ -100,12 +72,7 @@ function detectAuthResolution(modelRegistry: ModelRegistryLike, currentModel: Mo
   };
 }
 
-function selection(
-  model: ModelInfo,
-  thinkingLevel: ThinkingLevel,
-  authResolution: AuthResolution,
-  reason: string,
-): SelectedSmallModel {
+function selection(model, thinkingLevel, authResolution, reason) {
   return {
     model,
     thinkingLevel,
@@ -115,11 +82,7 @@ function selection(
   };
 }
 
-function fallbackSelection(
-  available: ModelInfo[],
-  currentModel: ModelInfo | undefined,
-  authResolution: AuthResolution,
-): SelectedSmallModel | null {
+function fallbackSelection(available, currentModel, authResolution) {
   const currentProvider = currentModel?.provider;
 
   if (currentProvider) {
@@ -144,10 +107,7 @@ function fallbackSelection(
   return null;
 }
 
-export function getSmallModelFromProvider(
-  modelRegistry: ModelRegistryLike,
-  currentModel: ModelInfo | undefined,
-): SelectedSmallModel | null {
+export function getSmallModelFromProvider(modelRegistry, currentModel) {
   const available = modelRegistry.getAvailable();
   const authResolution = detectAuthResolution(modelRegistry, currentModel);
 
