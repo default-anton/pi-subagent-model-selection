@@ -1,6 +1,6 @@
 {
   "name": "pi-subagent-model-selection",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Shared deterministic model-selection policy for pi subagent extensions",
   "type": "module",
   "keywords": [

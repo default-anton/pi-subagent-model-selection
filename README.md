@@ -29,8 +29,9 @@ The return value includes:
 Selection uses `modelRegistry.getAvailable()` and current-model auth context.
 
 If current model uses OAuth credentials:
-1. `google-antigravity/gemini-3-flash`
-2. Fallback strategy
+1. `openai-codex/gpt-5.3-codex-spark` (`thinkingLevel: high`)
+2. `google-antigravity/gemini-3-flash`
+3. Fallback strategy
 
 If current model uses API key credentials:
 1. `google-vertex` Gemini 3 Flash (`gemini-3-flash*`)

@@ -1,3 +1,9 @@
+const OAUTH_PRIMARY_MODEL = {
+  provider: "openai-codex",
+  id: "gpt-5.3-codex-spark",
+  thinkingLevel: "high",
+};
+
 const ANTIGRAVITY_GEMINI_FLASH = {
   provider: "google-antigravity",
   id: "gemini-3-flash",
@@ -112,6 +118,16 @@ export function getSmallModelFromProvider(modelRegistry, currentModel) {
   const authResolution = detectAuthResolution(modelRegistry, currentModel);
 
   if (authResolution.authMode === "oauth") {
+    const oauthPrimaryModel = exactProviderModel(available, OAUTH_PRIMARY_MODEL.provider, OAUTH_PRIMARY_MODEL.id);
+    if (oauthPrimaryModel) {
+      return selection(
+        oauthPrimaryModel,
+        OAUTH_PRIMARY_MODEL.thinkingLevel,
+        authResolution,
+        "oauth: prefer openai-codex/gpt-5.3-codex-spark",
+      );
+    }
+
     const antigravityGeminiFlash = exactProviderModel(
       available,
       ANTIGRAVITY_GEMINI_FLASH.provider,
@@ -122,7 +138,7 @@ export function getSmallModelFromProvider(modelRegistry, currentModel) {
         antigravityGeminiFlash,
         ANTIGRAVITY_GEMINI_FLASH.thinkingLevel,
         authResolution,
-        "oauth: prefer google-antigravity/gemini-3-flash",
+        "oauth: fallback to google-antigravity/gemini-3-flash",
       );
     }
 

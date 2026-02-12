@@ -17,7 +17,26 @@ function makeRegistry(models, options = {}) {
   };
 }
 
-test("oauth mode prefers google-antigravity/gemini-3-flash", () => {
+test("oauth mode prefers openai-codex/gpt-5.3-codex-spark with high thinking", () => {
+  const models = [
+    { provider: "openai-codex", id: "gpt-5.3-codex-spark" },
+    { provider: "google-antigravity", id: "gemini-3-flash" },
+  ];
+
+  const selected = getSmallModelFromProvider(
+    makeRegistry(models, { authSource: "oauth", usingOAuth: true }),
+    { provider: "openai-codex", id: "gpt-5.3-codex" },
+  );
+
+  assert.ok(selected);
+  assert.equal(selected.model.provider, "openai-codex");
+  assert.equal(selected.model.id, "gpt-5.3-codex-spark");
+  assert.equal(selected.thinkingLevel, "high");
+  assert.equal(selected.authMode, "oauth");
+  assert.equal(selected.authSource, "oauth");
+});
+
+test("oauth mode falls back to google-antigravity/gemini-3-flash when codex spark is unavailable", () => {
   const models = [
     { provider: "google-antigravity", id: "gemini-3-flash" },
     { provider: "google-vertex", id: "gemini-3-flash-preview" },
@@ -31,8 +50,7 @@ test("oauth mode prefers google-antigravity/gemini-3-flash", () => {
   assert.ok(selected);
   assert.equal(selected.model.provider, "google-antigravity");
   assert.equal(selected.model.id, "gemini-3-flash");
-  assert.equal(selected.authMode, "oauth");
-  assert.equal(selected.authSource, "oauth");
+  assert.equal(selected.thinkingLevel, "low");
 });
 
 test("api-key mode prefers google-vertex gemini-3-flash family", () => {
