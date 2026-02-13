@@ -23,6 +23,20 @@ All notable changes to `pi-subagent-model-selection` are documented here.
 
 - None.
 
+## [0.1.4] - 2026-02-13
+
+### Added
+
+- None.
+
+### Changed
+
+- No behavioral changes; published a patch to anchor downstream dependency updates in companion packages.
+
+### Fixed
+
+- None.
+
 ## [0.1.3] - 2026-02-12
 
 ### Added
